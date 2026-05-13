@@ -4,12 +4,17 @@ import { AIProvider, ProviderError } from "./base";
 export class OpenAIProvider implements AIProvider {
   name = "openai";
   private client: OpenAI;
+  private apiKey: string | undefined;
 
   constructor(apiKey?: string) {
-    this.client = new OpenAI({ apiKey: apiKey || process.env.OPENAI_API_KEY });
+    this.apiKey = apiKey || process.env.OPENAI_API_KEY;
+    this.client = new OpenAI({ apiKey: this.apiKey });
   }
 
   async listModels(): Promise<string[]> {
+    if (!this.apiKey) {
+      throw new ProviderError("OpenAI API key is required to list models", "auth");
+    }
     const list = await this.client.models.list();
     return list.data.map((m) => m.id);
   }

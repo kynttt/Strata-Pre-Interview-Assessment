@@ -42,6 +42,14 @@ export default async function handler(
     return res.status(200).json({ models });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to list models";
+    const isAuthError = message.toLowerCase().includes("api key") || message.toLowerCase().includes("auth");
+    const isNetworkError = message.toLowerCase().includes("not running") || message.toLowerCase().includes("unavailable");
+    if (isAuthError) {
+      return res.status(400).json({ error: "Invalid or missing API key. Please check your configuration." });
+    }
+    if (isNetworkError) {
+      return res.status(503).json({ error: message });
+    }
     return res.status(500).json({ error: message });
   }
 }

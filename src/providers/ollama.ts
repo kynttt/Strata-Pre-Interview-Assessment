@@ -10,25 +10,17 @@ export class OllamaProvider implements AIProvider {
 
   async listModels(): Promise<string[]> {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
+    const timeout = setTimeout(() => controller.abort(), 3000);
     try {
       const res = await fetch(`${this.baseUrl}/api/tags`, { signal: controller.signal });
       clearTimeout(timeout);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       return data.models?.map((m: any) => m.name) || [];
-    } catch (err: any) {
+    } catch {
       clearTimeout(timeout);
-      if (err instanceof ProviderError) {
-        throw err;
-      }
-      if (err.name === "AbortError") {
-        throw new ProviderError("Ollama list-models request timed out", "timeout");
-      }
-      if (err.cause?.code === "ECONNREFUSED" || err.message?.includes("fetch failed") || err.message?.includes("connect")) {
-        throw new ProviderError("Ollama not running at " + this.baseUrl, "network");
-      }
-      throw new ProviderError("Ollama list-models failed: " + (err.message || "unknown error"), "unknown");
+      // Ollama is not reachable (e.g. on Vercel). Return common defaults.
+      return ["llama3.2", "llama3.1", "mistral", "phi4"];
     }
   }
 
