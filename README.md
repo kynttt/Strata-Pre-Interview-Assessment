@@ -28,11 +28,11 @@ To try it out, go to **Configure AI**, enter your API key (OpenAI, Anthropic, or
 
 | Configure AI | Enquiries Page |
 |---|---|
-| ![AI Configuration](/ai-config.JPG) | ![Enquiries Page](/enquiry-page.JPG) |
+| ![AI Configuration](https://strata-pre-interview-assessment.vercel.app/ai-config.JPG) | ![Enquiries Page](https://strata-pre-interview-assessment.vercel.app/enquiry-page.JPG) |
 
 | Dashboard (Team Tabs) | Generate Response |
 |---|---|
-| ![Dashboard](/team-page.JPG) | ![Generate Response](/generate%20response.JPG) |
+| ![Dashboard](https://strata-pre-interview-assessment.vercel.app/team-page.JPG) | ![Generate Response](https://strata-pre-interview-assessment.vercel.app/generate%20response.JPG) |
 
 ### Prerequisites
 
