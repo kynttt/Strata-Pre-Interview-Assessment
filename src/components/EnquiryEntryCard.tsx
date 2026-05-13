@@ -400,7 +400,7 @@ export default function EnquiryEntryCard({
         )}
 
         {/* Generate Response */}
-        {!record.response && record.classification && record.routing && (
+        {!record.response && record.classification && (
           <div className="space-y-3">
             <motion.button
               type="button"
