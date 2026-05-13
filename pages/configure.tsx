@@ -64,10 +64,12 @@ export default function ConfigurePage() {
   });
 
   const providerType = watch("providerType");
+  const apiKey = watch("apiKey");
 
   useEffect(() => {
     setModels(DEFAULT_MODELS[providerType] || []);
     setValue("model", DEFAULT_MODELS[providerType]?.[0] || "");
+    setValue("apiKey", "");
   }, [providerType, setValue]);
 
   const fetchModels = async () => {
@@ -196,70 +198,72 @@ export default function ConfigurePage() {
             </Card>
           </motion.div>
 
-          <motion.div custom={1} variants={cardVariants} initial="hidden" animate="show">
-            <Card className="border-border bg-card shadow-md">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-                    <rect width="18" height="18" x="3" y="3" rx="2" />
-                    <path d="M7 7h.01" />
-                    <path d="M7 12h.01" />
-                    <path d="M7 17h.01" />
-                    <path d="M12 7h.01" />
-                    <path d="M12 12h.01" />
-                    <path d="M12 17h.01" />
-                    <path d="M17 7h.01" />
-                    <path d="M17 12h.01" />
-                    <path d="M17 17h.01" />
-                  </svg>
-                  <CardTitle>Model</CardTitle>
-                </div>
-                <CardDescription>Select the model to use for processing enquiries.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="model">Model</Label>
-                  <div className="flex gap-2">
-                    <Controller
-                      name="model"
-                      control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="model" className="flex-1">
-                            <SelectValue placeholder="Select a model" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {models.map((m) => (
-                              <SelectItem key={m} value={m}>
-                                {m}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
-                    <motion.div whileTap={{ scale: 0.96 }}>
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        onClick={fetchModels}
-                        disabled={fetchingModels}
-                        className="cursor-pointer transition-all duration-200"
-                      >
-                        {fetchingModels ? "Fetching..." : "Fetch Models"}
-                      </Button>
-                    </motion.div>
+          {(providerType === "ollama" || apiKey) && (
+            <motion.div custom={1} variants={cardVariants} initial="hidden" animate="show">
+              <Card className="border-border bg-card shadow-md">
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                      <rect width="18" height="18" x="3" y="3" rx="2" />
+                      <path d="M7 7h.01" />
+                      <path d="M7 12h.01" />
+                      <path d="M7 17h.01" />
+                      <path d="M12 7h.01" />
+                      <path d="M12 12h.01" />
+                      <path d="M12 17h.01" />
+                      <path d="M17 7h.01" />
+                      <path d="M17 12h.01" />
+                      <path d="M17 17h.01" />
+                    </svg>
+                    <CardTitle>Model</CardTitle>
                   </div>
-                  {fetchError && (
-                    <p className="text-sm text-destructive font-medium">{fetchError}</p>
-                  )}
-                  {errors.model && (
-                    <p className="text-sm text-destructive font-medium">{errors.model.message}</p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+                  <CardDescription>Select the model to use for processing enquiries.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="model">Model</Label>
+                    <div className="flex gap-2">
+                      <Controller
+                        name="model"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="model" className="flex-1">
+                              <SelectValue placeholder="Select a model" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {models.map((m) => (
+                                <SelectItem key={m} value={m}>
+                                  {m}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      <motion.div whileTap={{ scale: 0.96 }}>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          onClick={fetchModels}
+                          disabled={fetchingModels}
+                          className="cursor-pointer transition-all duration-200"
+                        >
+                          {fetchingModels ? "Fetching..." : "Fetch Models"}
+                        </Button>
+                      </motion.div>
+                    </div>
+                    {fetchError && (
+                      <p className="text-sm text-destructive font-medium">{fetchError}</p>
+                    )}
+                    {errors.model && (
+                      <p className="text-sm text-destructive font-medium">{errors.model.message}</p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
 
           <AnimatePresence mode="wait">
             {providerType !== "ollama" ? (

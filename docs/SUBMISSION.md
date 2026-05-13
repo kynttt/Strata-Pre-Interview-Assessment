@@ -43,8 +43,12 @@ Open [http://localhost:3000](http://localhost:3000).
 
 1. Click **Configure AI** in the top navigation.
 2. Select a provider (OpenAI, Anthropic, Google, or Ollama).
-3. Choose a model and enter your API key (not needed for Ollama).
+3. Enter your API key and choose a model (not needed for Ollama).
 4. Click **Save**. Configuration is stored in `localStorage` and persists across sessions.
+
+**Free tier recommendations:**
+- **Google Gemini** — Use `gemini-1.5-flash-latest`. Google offers a generous free tier with rate limits suitable for testing.
+- **OpenAI** — Use `gpt-4o`. OpenAI provides limited free credits for new accounts; after that a paid plan is required.
 
 ### Using Ollama (Local / Offline)
 

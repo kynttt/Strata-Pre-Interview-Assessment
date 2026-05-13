@@ -98,6 +98,7 @@ No custom build settings needed.
 
 - [ ] Open the deployed URL
 - [ ] Go to **Configure AI** and set your provider + API key
+  - **Free tier tip:** Google Gemini users can use `gemini-1.5-flash-latest` on the free tier. OpenAI users can use `gpt-4o` with free trial credits.
 - [ ] Go to **Enquiries** → Chats tab, click **Process** on a sample conversation
 - [ ] Go to **Dashboard** (`/`) and verify the enquiry appears in the correct team tab
 - [ ] Click the enquiry → **Generate Response** → verify the AI draft appears

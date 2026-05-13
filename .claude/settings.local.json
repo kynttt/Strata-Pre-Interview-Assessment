@@ -63,7 +63,8 @@
       "PowerShell(Rename-Item *)",
       "PowerShell(Remove-Item *)",
       "Skill(update-config)",
-      "Bash(claude mcp *)"
+      "Bash(claude mcp *)",
+      "WebSearch"
     ]
   }
 }
