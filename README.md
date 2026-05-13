@@ -6,6 +6,7 @@ This document answers the five core requirements of the practical exam in one pl
 
 ## Table of Contents
 
+- [Quick Start: Process Flow](docs/process-flow.md) — Step-by-step walkthrough from opening the app to sending a response
 1. [Setup & Running the Project](#1-setup--running-the-project)
 2. [Confidence Scoring](#2-confidence-scoring)
 3. [Prompt Engineering](#3-prompt-engineering)
@@ -23,6 +24,8 @@ The app is deployed and can be tested at:
 **[https://strata-pre-interview-assessment.vercel.app/](https://strata-pre-interview-assessment.vercel.app/)**
 
 To try it out, go to **Configure AI**, enter your API key (OpenAI, Anthropic, or Google), choose a model, and save. Then go to **Enquiries** and click **Process** on any sample conversation.
+
+> **New to the app?** See the full step-by-step walkthrough: **[Process Flow Guide](docs/process-flow.md)** — covers everything from configuration to sending a response back to the client.
 
 ### Screenshots
 
