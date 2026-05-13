@@ -70,6 +70,13 @@ export class GoogleProvider implements AIProvider {
       if (err.status === 401 || err.message?.includes("API key not valid")) {
         throw new ProviderError("Invalid Google API key", "auth");
       }
+      if (err.status === 404 || err.message?.includes("is not found")) {
+        const suggestion = model.includes("latest") ? "" : ` Try "${model}-latest" instead.`;
+        throw new ProviderError(
+          `Model "${model}" is not available.${suggestion} Go to Configure AI and fetch models to see valid options.`,
+          "unknown"
+        );
+      }
       if (err.status >= 500 || err.code === "ECONNREFUSED") {
         throw new ProviderError("Google service unavailable", "network");
       }

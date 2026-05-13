@@ -86,6 +86,7 @@ export default function ConversationPage() {
   const [loading, setLoading] = useState(false);
   const [config, setConfig] = useState<AIConfig | null>(null);
   const [configError, setConfigError] = useState<string | null>(null);
+  const [processError, setProcessError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"conversation" | "inbox">("conversation");
   const [inboxCategory, setInboxCategory] = useState("received");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -401,6 +402,7 @@ export default function ConversationPage() {
       return;
     }
     if (ids.length === 0) return;
+    setProcessError(null);
 
     for (const id of ids) {
       const conv = conversations.find((c) => c.id === id);
@@ -430,10 +432,12 @@ export default function ConversationPage() {
         const processed = data as ProcessResponse;
 
         if (!res.ok) {
+          const errMsg = processed?.error || "Processing failed";
+          setProcessError(errMsg);
           setConversations((prev) =>
             prev.map((c) =>
               c.id === id
-                ? { ...c, status: "error" as const, error: processed?.error || "Processing failed" }
+                ? { ...c, status: "error" as const, error: errMsg }
                 : c
             )
           );
@@ -475,6 +479,7 @@ export default function ConversationPage() {
           }
         }
       } catch {
+        setProcessError("Network error while processing enquiry. Please check your connection and try again.");
         setConversations((prev) =>
           prev.map((c) => (c.id === id ? { ...c, status: "error" as const, error: "Network error" } : c))
         );
@@ -502,6 +507,7 @@ export default function ConversationPage() {
       return;
     }
     if (ids.length === 0) return;
+    setProcessError(null);
 
     setProcessingIds(ids);
     setDemoEnquiries((prev) =>
@@ -528,10 +534,12 @@ export default function ConversationPage() {
 
       if (!res.ok) {
         const data = await res.json();
+        const errMsg = data?.error || "Batch enqueue failed";
+        setProcessError(errMsg);
         setDemoEnquiries((prev) =>
           prev.map((e) =>
             ids.includes(e.id)
-              ? { ...e, status: "error" as const, error: data?.error || "Batch enqueue failed" }
+              ? { ...e, status: "error" as const, error: errMsg }
               : e
           )
         );
@@ -543,10 +551,12 @@ export default function ConversationPage() {
       const data = await res.json();
       setActiveJobIds(data.jobIds);
     } catch {
+      const errMsg = "Network error. Please try again.";
+      setProcessError(errMsg);
       setDemoEnquiries((prev) =>
         prev.map((e) =>
           ids.includes(e.id)
-            ? { ...e, status: "error" as const, error: "Network error. Please try again." }
+            ? { ...e, status: "error" as const, error: errMsg }
             : e
         )
       );
@@ -637,13 +647,15 @@ export default function ConversationPage() {
             setProcessingIds((prev) => prev.filter((id) => id !== itemId));
             setActiveJobIds((prev) => prev.filter((jid) => jid !== status.id));
           } else if (status.state === "failed") {
+            const errMsg = status.failedReason || "Processing failed";
+            setProcessError(errMsg);
             setDemoEnquiries((prev) =>
               prev.map((e) =>
                 e.id === itemId
                   ? {
                       ...e,
                       status: "error" as const,
-                      error: status.failedReason || "Processing failed",
+                      error: errMsg,
                     }
                   : e
               )
@@ -700,6 +712,36 @@ export default function ConversationPage() {
             >
               Go to Configuration
             </Link>
+          </motion.div>
+        )}
+        {processError && (
+          <motion.div
+            key="process-error"
+            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.98 }}
+            transition={{ duration: 0.3 }}
+            role="alert"
+            className="mb-6 bg-card border border-destructive/30 rounded-xl p-5 flex items-center justify-between shadow-md"
+          >
+            <div className="flex items-center gap-3">
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-destructive flex-shrink-0">
+                <circle cx="12" cy="12" r="10" />
+                <path d="m15 9-6 6" />
+                <path d="m9 9 6 6" />
+              </svg>
+              <div>
+                <p className="text-sm text-foreground font-semibold">Processing Error</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{processError}</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setProcessError(null)}
+              className={cn(buttonVariants({ variant: "outline" }), "cursor-pointer transition-all duration-200 border-destructive/30 hover:bg-destructive/5")}
+            >
+              Dismiss
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
